@@ -65,7 +65,7 @@ string Menu()
     Console.WriteLine("1. Adicionar dato.");
     Console.WriteLine("2. Mostrar hacia adelante.");
     Console.WriteLine("3. Mostarr hacia atras.");
-    Console.WriteLine("4. Show list backward.");
+    Console.WriteLine("4. Remover de la lista.");
     Console.WriteLine("5. Remove the list.");
     Console.WriteLine("0. Exit.");
     Console.WriteLine("ENTER YOUR OPTION");
