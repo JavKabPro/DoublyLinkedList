@@ -24,7 +24,6 @@ do
         case "4":
             list.Reverse();
             Console.WriteLine("La lista ha sido invertida (forma descendente).");
-            Console.WriteLine(list.GetForward());
             break;
         case "5":
             Console.WriteLine("Enter the data  to remove: ");
