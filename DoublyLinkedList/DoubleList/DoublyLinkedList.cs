@@ -13,6 +13,7 @@ namespace DoubleList;
     private DoubleNode<T>? _head;
     private DoubleNode<T>? _tail;
     private bool _isDescending = false;
+    private bool _isContaining = false;
         public DoublyLinkedList()
     {
         _head = null;
@@ -122,35 +123,86 @@ namespace DoubleList;
             output = output.Remove(output.Length - 5);
         return output;
     }
-    public void Remove(T data)
+    public bool Contains(T data)
     {
+        DoubleNode<T>? current = _head;
+        while (current != null)
+        {
+            if (current.Data!.Equals(data))
+            {
+                Console.WriteLine("Sí el elemento está.");
+                return true;
+            }
+            current = current.Next;
+            _isContaining = !_isContaining;
+        }
+        Console.WriteLine("No, el elemento no está.");
+        return false;
+    }
+    public bool Remove(T data)
+    {
+        if (_head == null)
+            return false;
         var current = _head;
         while (current != null)
         {
             if (current.Data!.Equals(data))
             {
                 if (current.Prev != null)
-                {
                     current.Prev.Next = current.Next;
-                }
                 else
-                {
-                    _head = current.Next;
-                }
+                    _head = current.Next; 
                 if (current.Next != null)
-                {
                     current.Next.Prev = current.Prev;
-                }
                 else
-                {
-                    _tail = current.Prev;
-                }
-                break;
+                    _tail = current.Prev; 
+                return true; 
             }
             current = current.Next;
         }
+        return false; 
     }
-}
+    public int RemoveAll(T data)
+    {
+        if (_head == null)
+            return 0;
+        int contRem = 0;
+        var actual = _head;
+
+        while (actual != null)
+        {
+            var next = actual.Next;
+
+            if (actual.Data!.Equals(data))
+            {
+                if (actual.Prev != null)
+                {
+                    actual.Prev.Next = actual.Next;
+                }
+                else
+                {
+                    _head = actual.Next;
+                }
+                if (actual.Next != null)
+                {
+                    actual.Next.Prev = actual.Prev;
+                }
+                else
+                {
+                    _tail = actual.Prev;
+                }
+                actual.Next = null;
+                actual.Prev = null;
+                contRem++;
+            }
+            actual = next;
+        }
+        if (_head == null)
+            _tail = null;
+        return contRem;
+    }
+   }
+
 
 
 
