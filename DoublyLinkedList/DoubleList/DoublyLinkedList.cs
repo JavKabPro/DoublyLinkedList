@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DoubleList;
 
- public class DoublyLinkedList<T>
+ public class DoublyLinkedList<T> where T : notnull 
 {
     private DoubleNode<T>? _head;
     private DoubleNode<T>? _tail;
@@ -201,7 +202,38 @@ namespace DoubleList;
             _tail = null;
         return contRem;
     }
-   }
+    public List<T> ShowMode()
+    {
+        Dictionary<T, int> cicle = new();
+        var actual = _head;
+
+        while (actual != null)
+        {
+            var key = actual.Data!;
+            if (cicle.ContainsKey(key))
+            {
+                cicle[key] = cicle[key] + 1;
+            }
+            else
+            {
+                cicle[key] = 1;
+            }
+            actual = actual.Next;
+        }
+        if (cicle.Count == 0)
+            return new List<T>();
+
+        int maxCicle = cicle.Values.Max();
+        List<T> modas = new List<T>();
+
+        foreach (var item in cicle)
+        {
+            if (item.Value == maxCicle)
+                modas.Add(item.Key);
+        }
+        return modas;
+    }
+}
 
 
 

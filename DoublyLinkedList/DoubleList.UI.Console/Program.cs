@@ -47,6 +47,18 @@ do
             else
                 Console.WriteLine("No se encontraron coincidencias o lista vacía.");
             break;
+        case "8":
+            var modas = list.ShowMode();
+            if (modas.Count == 0)
+            {
+                Console.WriteLine("La lista está vacía o no tiene modas.");
+            }
+            else
+            {
+                Console.Write("La(s) moda(s) es/son: ");
+                Console.WriteLine(string.Join(", ", modas));
+            }
+            break;
         default:
             Console.WriteLine("Opción inválida");
             break;
@@ -62,6 +74,7 @@ string Menu()
     Console.WriteLine("5. Contiene el dato.");
     Console.WriteLine("6. Eliminar ocurrencia.");
     Console.WriteLine("7. Eliminar todas ocurrencias.");
+    Console.WriteLine("8. Mostrar moda(s).");
     Console.WriteLine("0. Exit.");
     Console.WriteLine("ENTER YOUR OPTION");
     return Console.ReadLine()!;
