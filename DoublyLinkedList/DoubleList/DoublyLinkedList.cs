@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DoubleList;
 
- public class DoublyLinkedList<T> where T : notnull 
+public class DoublyLinkedList<T> where T : notnull
 {
     private DoubleNode<T>? _head;
     private DoubleNode<T>? _tail;
@@ -19,6 +14,10 @@ namespace DoubleList;
     {
         _head = null;
         _tail = null;
+    }
+        public bool IsEmpty()
+    {
+        return _head == null;
     }
     public void InsertAtBeginning(T data)
     {
@@ -137,7 +136,7 @@ namespace DoubleList;
             current = current.Next;
             _isContaining = !_isContaining;
         }
-        Console.WriteLine("No, el elemento no está.");
+        Console.WriteLine("No, el elemento no está o lista vacia.");
         return false;
     }
     public bool Remove(T data)
@@ -165,73 +164,71 @@ namespace DoubleList;
     }
     public int RemoveAll(T data)
     {
-        if (_head == null)
-            return 0;
-        int contRem = 0;
-        var actual = _head;
-
-        while (actual != null)
+        int removed = 0;
+        for (var node = _head; node != null; )
         {
-            var next = actual.Next;
-
-            if (actual.Data!.Equals(data))
+            var next = node.Next;
+            if (node.Data!.Equals(data))
             {
-                if (actual.Prev != null)
+                if (node.Prev is not null)
                 {
-                    actual.Prev.Next = actual.Next;
+                    node.Prev.Next = node.Next;
                 }
                 else
                 {
-                    _head = actual.Next;
+                    _head = node.Next;
                 }
-                if (actual.Next != null)
+                if (node.Next is not null)
                 {
-                    actual.Next.Prev = actual.Prev;
+                    node.Next.Prev = node.Prev;
                 }
                 else
                 {
-                    _tail = actual.Prev;
+                    _tail = node.Prev;
                 }
-                actual.Next = null;
-                actual.Prev = null;
-                contRem++;
+                node.Next = node.Prev = null;
+                removed++;
             }
-            actual = next;
+            node = next;
         }
-        if (_head == null)
-            _tail = null;
-        return contRem;
+        if (_head is null) _tail = null;
+        return removed;
     }
+
     public List<T> ShowMode()
     {
-        Dictionary<T, int> cicle = new();
-        var actual = _head;
+        var counts = new Dictionary<T, int>();
+        int maxCount = 0;
 
-        while (actual != null)
+        for (var node = _head; node != null; node = node.Next)
         {
-            var key = actual.Data!;
-            if (cicle.ContainsKey(key))
+            var key = node.Data;
+            if (key != null)
             {
-                cicle[key] = cicle[key] + 1;
+                counts[key] = counts.GetValueOrDefault(key, 0) + 1;
+                if (counts[key] > maxCount) maxCount = counts[key];
             }
-            else
-            {
-                cicle[key] = 1;
-            }
-            actual = actual.Next;
         }
-        if (cicle.Count == 0)
-            return new List<T>();
+        return maxCount == 0 ? new List<T>() : counts.Where(kv => kv.Value == maxCount).Select(kv => kv.Key).ToList();
+    }
+    public List<string> ShowGraph()
+    {
+        var result = new List<string>();
+        var counts = new Dictionary<T, int>();
 
-        int maxCicle = cicle.Values.Max();
-        List<T> modas = new List<T>();
-
-        foreach (var item in cicle)
+        for (var node = _head; node != null; node = node.Next)
         {
-            if (item.Value == maxCicle)
-                modas.Add(item.Key);
+            var key = node.Data;
+            if (key != null)
+            counts[key] = counts.GetValueOrDefault(key, 0) + 1;
         }
-        return modas;
+        var keys = counts.Keys.OrderBy(k => k);
+        foreach (var k in keys)
+        {
+            var stars = new string('*', counts[k]);
+            result.Add($"{k}. {stars}");
+        }
+        return result;
     }
 }
 
